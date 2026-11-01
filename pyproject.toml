@@ -1,0 +1,30 @@
+[project]
+name = "graphrag_snv"
+version = "0.1.0"
+description = "Tudásgráfos RAG-rendszerek (CUBIX)"
+readme = "README.md"
+authors = [
+    { name = "Nora Viktoria Sterbinszky", email = "Nora-Viktoria.Sterbinszky@telekom.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "fastapi>=0.115.0",
+    "langchain>=1.4.4",
+    "langchain-classic>=1.0.8",
+    "langchain-community>=0.4.2",
+	"langchain-core>=1.6.12",
+    "langchain-neo4j>=0.11.0",
+    "langchain-ollama>=1.1.0",
+    "langchain-qdrant>=1.1.0",
+	"neo4j>=6.4.1",
+    "uvicorn>=0.30.0",
+	"wikipedia>=1.4.0",
+]
+
+[project.scripts]
+graphrag_snv = "graphrag_snv:main"
+
+[build-system]
+requires = ["uv_build>=0.13.0,<0.14.0"]
+build-backend = "uv_build"

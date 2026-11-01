@@ -1,0 +1,51 @@
+============================================
+KORPUSZ SZERKEZETI ÉS DIAGNOSZTIKAI RIPORTJA
+============================================
+
+1. LEGHOSSZABB DOKUMENTUM: 
+  - Cím: Volkswagen Group
+  - Chunkok száma: 7 db
+
+2. LEGRÖVIDEBB DOKUMENTUMOK: 
+  - Iveco: 2 db chunk
+  - Daimler Truck: 3 db chunk
+  - PSA-csoport: 4 db chunk
+  - MAN SE: 5 db chunk
+  - Renault Trucks: 5 db chunk
+
+3. GYANÚS/SZEMÉT CHUNKOK (Hossz < 15 karakter): 
+  - Tiszta korpusz! Nincsenek kritikusan rövid vagy üres chunkok.
+
+4. LÁNCOLATI ÉPSÉG (Megszakadt NEXT_CHUNK kapcsolatok): 
+  - Tökéletes láncolat! Minden egymást követő chunk sikeresen össze van kötve.
+
+5. GLOBÁLIS STATISZTIKA: 
+  - Összes betöltött dokumentum: 10 db
+  - Adatbázisban lévő összes chunk: 50 db
+  - Chunkok átlagos hossza: 630.0 karakter
+
+--------------------------------------------------------------------------------
+
+
+6. FŐHADISZÁLLÁSOK SZÁMA ADOTT KONTINENSEN (EURÓPA): 
+  - 10 + 11 db főhadiszállás
+
+7. SCANIA TESTVÉRMÁRKÁI (LEGFELJEBB 5 MÉLYSÉGBEN): 
+  - MAN
+  - International Trucks
+
+8. VÁLLALATCSOPORTOK ALÁ TARTOZÓ MÁRKÁK SZÁMA: 
+  - Volvo Group: 3 db márka
+  - AB Volvo: 3 db márka
+  - Traton Group: 3 db márka
+  - Volkswagen Group: 3 db márka
+  - Daimler Truck Holding AG: 3 db márka
+  - PACCAR Inc.: 3 db márka
+  - General Motors (GM): 2 db márka
+  - Czechoslovak Group (CSG): 1 db márka
+  - Ford Motor Company: 1 db márka
+  - Stellantis N.V.: 1 db márka
+  - Rostec: 1 db márka
+  - Csepel Autógyár: 1 db márka
+
+================================================================================

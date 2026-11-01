@@ -1,0 +1,63 @@
+# GraphRAG 1. – Naiv RAG 1. házi feladat
+
+## Korpusz (forrásdokumentumok):
+
+- <https://hu.wikipedia.org/wiki/Volvo>
+- <https://en.wikipedia.org/wiki/Volvo_Trucks>
+- <https://hu.wikipedia.org/wiki/Stellantis>
+- <https://hu.wikipedia.org/wiki/Volkswagen>
+- <https://hu.wikipedia.org/wiki/Toyota>
+- <https://hu.wikipedia.org/wiki/Fiat_Chrysler_Automobiles>
+- <https://hu.wikipedia.org/wiki/PSA-csoport>
+- <https://hu.wikipedia.org/wiki/BMW>
+- <https://hu.wikipedia.org/wiki/Mercedes-Benz>
+- <https://hu.wikipedia.org/wiki/DS_Automobiles>
+- <https://hu.wikipedia.org/wiki/Leapmotor>
+- <https://hu.wikipedia.org/wiki/Alfa_Romeo>
+- <https://hu.wikipedia.org/wiki/Chrysler_Corporation>
+- <https://hu.wikipedia.org/wiki/Citroën>
+- <https://hu.wikipedia.org/wiki/Dodge>
+- <https://hu.wikipedia.org/wiki/Fiat>
+- <https://hu.wikipedia.org/wiki/Jeep>
+- <https://hu.wikipedia.org/wiki/Lancia>
+- <https://hu.wikipedia.org/wiki/Maserati>
+- <https://hu.wikipedia.org/wiki/Opel>
+- <https://hu.wikipedia.org/wiki/Peugeot>
+- <https://hu.wikipedia.org/wiki/Vauxhall_Motors>
+- <https://hu.wikipedia.org/wiki/Škoda_Auto>
+- <https://hu.wikipedia.org/wiki/SEAT>
+- <https://hu.wikipedia.org/wiki/Cupra>
+- <https://hu.wikipedia.org/wiki/Audi_AG>
+- <https://hu.wikipedia.org/wiki/Lamborghini>
+- <https://hu.wikipedia.org/wiki/Bentley>
+- <https://hu.wikipedia.org/wiki/Ducati>
+- <https://hu.wikipedia.org/wiki/Porsche>
+- <https://hu.wikipedia.org/wiki/Scania>
+- <https://hu.wikipedia.org/wiki/MAN_SE>
+- <https://hu.wikipedia.org/wiki/Volkswagen_(márka)>
+- <https://en.wikipedia.org/wiki/Chery>
+- <https://en.wikipedia.org/wiki/Omoda>
+- <https://hu.wikipedia.org/wiki/Jaecoo>
+- <https://hu.wikipedia.org/wiki/BYD_Auto>
+- <https://hu.wikipedia.org/wiki/Mazda>
+- <https://hu.wikipedia.org/wiki/Suzuki>
+- <https://hu.wikipedia.org/wiki/Honda>
+- <https://hu.wikipedia.org/wiki/Mitsubishi>
+- <https://hu.wikipedia.org/wiki/Hyundai>
+- <https://hu.wikipedia.org/wiki/Kia_Motors>
+- <https://hu.wikipedia.org/wiki/Daewoo>
+- <https://en.wikipedia.org/wiki/MG_Motor>
+- <https://en.wikipedia.org/wiki/GMC_(automobile)>
+- <https://hu.wikipedia.org/wiki/General_Motors>
+- <https://hu.wikipedia.org/wiki/Ford_Motor_Company>
+- <https://hu.wikipedia.org/wiki/Renault>
+- <https://hu.wikipedia.org/wiki/Renault_Trucks>
+- <https://hu.wikipedia.org/wiki/DAF_(gépjárművek)>
+- <https://en.wikipedia.org/wiki/Iveco>
+- <https://hu.wikipedia.org/wiki/Daimler_Truck>
+- <https://hu.wikipedia.org/wiki/Rolls-Royce_Motor_Cars>
+- <https://hu.wikipedia.org/wiki/Bugatti>
+- <https://hu.wikipedia.org/wiki/Ferrari>
+- <https://en.wikipedia.org/wiki/KG_Mobility>
+- <https://en.wikipedia.org/wiki/Buick>
+
