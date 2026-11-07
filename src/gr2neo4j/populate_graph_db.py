@@ -1,87 +1,114 @@
-import time
-from datetime import UTC, datetime
+#import time
+#from datetime import datetime
 
-import wikipedia
-from langchain_community.document_loaders import WikipediaLoader
+#import wikipedia
+#from langchain_community.document_loaders import WikipediaLoader
 from langchain_community.graphs import Neo4jGraph
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from gr2neo4j.cyphers import CYPHERS
+#from langchain_text_splitters import RecursiveCharacterTextSplitter
+from gr1naivrag.ingester import ingest_wikipedia_links
+from gr2neo4j.cyphers import CONSTRAINT_CYPHERS, SEED_CYPHERS
 
 
-def upsert_domain_graph(graph: Neo4jGraph):
-    ##with graph:
-    #for idx, cypher in enumerate(CYPHERS, 1):
-    #    graph.query(cypher)
-    #    print(f"[{idx}/{len(CYPHERS)}] sikeresen végrehajtva")
-    print(f"{len(CYPHERS)} db CYPHER-utasítás kötegelt végrehajtása...")
+def set_constraints(graph: Neo4jGraph):
+    print(f"{len(CONSTRAINT_CYPHERS)} db CONSTRAINT-CYPHER-parancsok kötegelt végrehajtása...")
     
     batch_query = """
     CALL apoc.cypher.runMany($queries, {})
     """
     
     try:
-        #graph.query(batch_query, {"queries": CYPHERS})
-        combined_queries = ";\n".join(CYPHERS)
+        combined_queries = ";\n".join(CONSTRAINT_CYPHERS)
         graph.query(batch_query, {"queries": combined_queries})
-        print("Minden CYPHER-utasítás sikeresen végrehajtva!")
+        print("Minden CONSTRAINT-CYPHER-parancs sikeresen végrehajtva!")
     except Exception as e:
-        print(f"Hiba történt a batch végrehajtása közben: {e}")
+        print(f"Hiba történt a batch végrehajtása közben (constraints): {e}")
 
+def upsert_domain_graph(graph: Neo4jGraph):
+    ##with graph:
+    #for idx, cypher in enumerate(SEED_CYPHERS, 1):
+    #    graph.query(cypher)
+    #    print(f"[{idx}/{len(SEED_CYPHERS)}] sikeresen végrehajtva")
+    print(f"{len(SEED_CYPHERS)} db SEED-CYPHER-parancsok kötegelt végrehajtása...")
+    
+    batch_query = """
+    CALL apoc.cypher.runMany($queries, {})
+    """
+    
+    try:
+        #graph.query(batch_query, {"queries": SEED_CYPHERS})
+        combined_queries = ";\n".join(SEED_CYPHERS)
+        graph.query(batch_query, {"queries": combined_queries})
+        print("Minden SEED-CYPHER-parancs sikeresen végrehajtva!")
+    except Exception as e:
+        print(f"Hiba történt a batch végrehajtása közben (seed): {e}")
 
-wikipedia.set_user_agent("GepjarmuGrafExtrakcio/1.0 (kapcsolat: snorav3@gmail.com)")
+####################################################################################################
+# #unused!
+# #wikipedia.set_user_agent("GepjarmuGrafExtrakcio/1.0 (kapcsolat: snorav3@gmail.com)")
+#
+# #unused!
+# def upsert_graph_from_wiki_pages(graph: Neo4jGraph, pages):
+#     wiki_chunks_data = load_and_chunk_wikipedia(pages)
+#    
+#     if wiki_chunks_data:
+#         upsert_document_graph(graph, wiki_chunks_data)
+#         print("A dokumentum-gráf sikeresen elkészült!")
+#     else:
+#         print("Nem sikerült adatot letölteni a Wikipédiáról.")
+#    
+# #unused!
+# def load_and_chunk_wikipedia(pages):
+#     all_chunks = {}
+#    
+#     # 1000 karakteres chunkok
+#     text_splitter = RecursiveCharacterTextSplitter(
+#         chunk_size=1000,
+#         chunk_overlap=200
+#     )
+#    
+#     for page in pages:
+#         print(f"'{page}' Wikipédia-oldal letöltése...")
+#         try:
+#             loader = WikipediaLoader(query=page, load_max_docs=1, lang="hu")
+#             docs = loader.load()
+#            
+#             if not docs:
+#                 loader = WikipediaLoader(query=page, load_max_docs=1, lang="en")
+#                 docs = loader.load()
+#                
+#             if docs:
+#                 doc = docs[0]
+#                 chunks = text_splitter.split_documents([doc])
+#                 for chunk_idx, chunk in enumerate(chunks):
+#                     chunk.metadata["chunk_idx"] = chunk_idx
+#
+#                 all_chunks[page] = {
+#                     "title": page,
+#                     "source_url": doc.metadata.get("source", f"https://wikipedia.org{page}"),
+#                     "source_id": f"wiki_{page.lower().replace(' ', '_')}", # pl: wiki_volvo_trucks
+#                     "downloaded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+#                     "chunks": chunks
+#                 }
+#                 print(f"Létrejött {len(chunks)} db chunk a(z) '{page}' oldalhoz.")
+#             else:
+#                 print(f"Nem található tartalom a(z) '{page}' oldalhoz.")
+#         except Exception as e:
+#             print(f"Hiba a(z) '{page}' oldal letöltésekor: {e}")
+#            
+#         time.sleep(1.5)
+#        
+#     return all_chunks
+####################################################################################################
 
-def upsert_graph_from_wiki_pages(graph: Neo4jGraph, pages):
-    wiki_chunks_data = load_and_chunk_wikipedia(pages)
+def upsert_graph_from_wiki_urls(graph: Neo4jGraph, urls: list[str]):
+    wiki_chunks_data = ingest_wikipedia_links(urls)
     
     if wiki_chunks_data:
         upsert_document_graph(graph, wiki_chunks_data)
         print("A dokumentum-gráf sikeresen elkészült!")
     else:
         print("Nem sikerült adatot letölteni a Wikipédiáról.")
-    
-
-def load_and_chunk_wikipedia(pages):
-    all_chunks = {}
-    
-    # 1000 karakteres chunkok
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200
-    )
-    
-    for page in pages:
-        print(f"'{page}' Wikipédia-oldal letöltése...")
-        try:
-            loader = WikipediaLoader(query=page, load_max_docs=1, lang="hu")
-            docs = loader.load()
-            
-            if not docs:
-                loader = WikipediaLoader(query=page, load_max_docs=1, lang="en")
-                docs = loader.load()
-                
-            if docs:
-                doc = docs[0]
-                chunks = text_splitter.split_documents([doc])
-                for chunk_idx, chunk in enumerate(chunks):
-                    chunk.metadata["chunk_idx"] = chunk_idx
-
-                all_chunks[page] = {
-                    "title": page,
-                    "source_url": doc.metadata.get("source", f"https://wikipedia.org{page}"),
-                    "source_id": f"wiki_{page.lower().replace(' ', '_')}", # pl: wiki_volvo_trucks
-                    "downloaded_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    "chunks": chunks
-                }
-                print(f"Létrejött {len(chunks)} db chunk a(z) '{page}' oldalhoz.")
-            else:
-                print(f"Nem található tartalom a(z) '{page}' oldalhoz.")
-        except Exception as e:
-            print(f"Hiba a(z) '{page}' oldal letöltésekor: {e}")
-            
-        time.sleep(1.5)
-        
-    return all_chunks
 
 
 def upsert_document_graph(graph: Neo4jGraph, graph_data):    

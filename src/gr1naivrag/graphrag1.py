@@ -4,7 +4,8 @@ from fastapi import FastAPI
 #from langchain.chains.retrieval import create_retrieval_chain
 from pydantic import BaseModel
 
-from gr1naivrag.collectors import collect_questions, collect_wikipedia_links
+from gr1naivrag.collectors import collect_questions
+from gr1naivrag.ingester import ingest_wikipedia_links_flat
 from gr1naivrag.my_qdrant import LocalRagWithQdrant
 
 QDRANT_URL = "http://localhost:6333"
@@ -22,17 +23,14 @@ class ChatRequest(BaseModel):
 
 def naivrag():
     rag = LocalRagWithQdrant()
-    
-    # Wikipédia források (Magyar Wikipédia oldalak)
-    #wiki_urls = collect_wikipedia_links(SOURCES_FILE_PATH)
-    
+        
     # 1. Adatok betöltése
-    #chunks = rag.ingest_wikipedia_links(wiki_urls)
-    #rag.store_chunks(chunks)
+    #chunks = ingest_wikipedia_links_flat()
+    #rag.ingest_into_qdrant(chunks)
     
-
     # 2/a. Kérdések kigyűjtése a fájlból
     questions = collect_questions(QUESTIONS_FILE_PATH)
+    
     for ord, q in enumerate(questions, 1):
         print(f"\n\n================================ {ord}. KÉRDÉS ================================")
         rag.ask_question(q)

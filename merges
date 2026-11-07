@@ -1,3 +1,4 @@
+#unused!
 MATCH (n) DETACH DELETE n
 
 MERGE (sweden:Country {name: 'Svédország'})

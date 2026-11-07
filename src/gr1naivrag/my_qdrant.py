@@ -1,4 +1,11 @@
-from langchain_classic.schema import Document
+from operator import itemgetter
+
+#from langchain_classic.chains import create_retrieval_chain
+#from langchain_classic.chains.combine_documents import create_stuff_documents_chain
+from langchain_core.documents import Document
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnableLambda, RunnablePassthrough
 from langchain_ollama import ChatOllama, OllamaEmbeddings
 from langchain_qdrant import QdrantVectorStore
 from qdrant_client import QdrantClient
@@ -40,9 +47,80 @@ class LocalRagWithQdrant:
             )
             print(f"[Qdrant] '{COLLECTION_NAME}' kollekció sikeresen létrehozva.")
 
-
-def store_chunks(self, chunks: list[Document]):        
+    # store chunks
+    def ingest_into_qdrant(self, chunks: list[Document]) -> None:
         # Embedding & save vectors into Qdrant
         print("[Qdrant] Vektorok generálása és mentése az adatbázisba...")
         self.vector_store.add_documents(chunks)
         print("[Rendszer] Sikeres indexelés!")
+
+############################################################## ASK QUESTIONS: ##############################################################
+
+    def ask_question(self, question: str):
+        """Létrehozza a RAG láncot és megválaszolja a kérdést a kontextus alapján."""
+        print(f"\n[Keresés] Releváns dokumentumok kigyűjtése a kérdéshez: '{question}'")
+        
+        # Vector Store -> Retriever
+        retriever = self.vector_store.as_retriever(search_kwargs={"k": 5}) # A top 5 legközelebbi darabot kéri le
+        
+        # Prompt tamplate
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", (
+                "A következő kikeresett kontextus alapján válaszolj a kérdésre magyarul. "
+                "Ha nem találod a választ a kontextusban, mondd azt, hogy nem tudod, ne találj ki semmit.\n\nKontextus:\n{context}"
+            )),
+            ("user", "{input}")
+        ])
+        
+        # LangChain
+        #question_answer_chain = create_stuff_documents_chain(self.llm, prompt)
+        #rag_chain = create_retrieval_chain(retriever, question_answer_chain)
+        # or with pipes:
+        document_chain = (
+            {
+                "context": itemgetter("context")
+                | RunnableLambda(
+                    lambda documents: "\n\n".join(
+                        document.page_content for document in documents
+                    )
+                ),
+                "input": itemgetter("input"),
+            }
+            | prompt
+            | self.llm
+            | StrOutputParser()
+        )
+        rag_chain = (
+            RunnablePassthrough.assign(context=itemgetter("input") | retriever)
+            | RunnablePassthrough.assign(answer=document_chain)
+        )
+
+        print("\n============================ LOKÁLIS AI VÁLASZ =============================")
+        # direct answer:
+        #response = rag_chain.invoke({"input": question})
+        #print(response["answer"])
+        
+        # tokenized (streaming) answer:
+        answer_parts: list[str] = []
+        context = []
+
+        for chunk in rag_chain.stream({"input": question}):
+            if "context" in chunk:
+                context = chunk["context"]
+            answer_chunk = chunk.get("answer")
+            if answer_chunk:
+                print(answer_chunk, end="", flush=True)
+                answer_parts.append(answer_chunk)
+        print()
+
+        # Források
+        print("================================ FORRÁSOK ==================================")
+        for i, doc in enumerate(context, 1):
+            src_loc = doc.metadata.get("source", "Ismeretlen forrás")
+            page_num = doc.metadata.get("page", "-")
+            print(f"[{i}] {src_loc} (Oldal: {page_num})")
+            #print(f"    Idézet: {doc.page_content[:100]}...")
+        
+        print("----------------------------------------------------------------------------\n")
+
+        return "".join(answer_parts)

@@ -1,5 +1,15 @@
-CYPHERS = [
-    "MATCH (n) DETACH DELETE n",
+CONSTRAINT_CYPHERS = [
+    "CREATE CONSTRAINT unique_country_name IF NOT EXISTS FOR (c:Country) REQUIRE c.name IS UNIQUE", 
+    "CREATE CONSTRAINT unique_region_name IF NOT EXISTS  FOR (r:Region) REQUIRE r.name IS UNIQUE",
+    "CREATE CONSTRAINT unique_companygroup_name IF NOT EXISTS  FOR (cg:CompanyGroup) REQUIRE cg.name IS UNIQUE",
+    "CREATE CONSTRAINT unique_truckbrand_name IF NOT EXISTS  FOR (tb:TruckBrand) REQUIRE tb.name IS UNIQUE",
+    
+    "CREATE CONSTRAINT unique_document_id IF NOT EXISTS  FOR (d:Document) REQUIRE d.id IS UNIQUE",
+    "CREATE CONSTRAINT unique_chunk_id IF NOT EXISTS  FOR (ch:Chunk) REQUIRE ch.id IS UNIQUE"
+]
+
+SEED_CYPHERS = [
+    #"MATCH (n) DETACH DELETE n",
     
     "MERGE (sweden:Country {name: 'Svédország'})",
     "MERGE (germany:Country {name: 'Németország'})",

@@ -3,10 +3,17 @@ import os
 from dotenv import load_dotenv
 from langchain_neo4j import Neo4jGraph
 
-from gr2neo4j.populate_graph_db import upsert_domain_graph, upsert_graph_from_wiki_pages
+from gr1naivrag.collectors import collect_wikipedia_links
+from gr2neo4j.populate_graph_db import (
+    set_constraints,
+    upsert_domain_graph,
+#    upsert_graph_from_wiki_pages,
+    upsert_graph_from_wiki_urls,
+)
 from gr2neo4j.query_graph_db import run_diagnostic_report, setup_graph_rag
 from gr2neo4j.questions import QUESTIONS
-from gr2neo4j.wikis import WIKI_PAGES
+
+#from gr2neo4j.wikis import WIKI_PAGES
 
 load_dotenv()
 
@@ -16,10 +23,14 @@ NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "my_passwd")
 
 CHAT_MODEL = "qwen2.5:0.5b"
 
+SOURCES_FILE_PATH = "README.md"
+
 
 def neo4j():
     graph = Neo4jGraph(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, refresh_schema=False)
     
+    # 0. Megszorítások beállítása a gráfon (1x):
+    #set_constraints(graph)    
     # 1. Gráf feltöltése saját seed adatokkal:
     #upsert_domain_graph(graph)
     
@@ -27,6 +38,9 @@ def neo4j():
     
     # 2. Gráf feltöltése a valódi dokumentumokkal (Wikipédia-oldalakból kivonatolva):
     #upsert_graph_from_wiki_pages(graph, WIKI_PAGES)
+    # Wikipédia források (Magyar Wikipédia oldalak)
+    #wiki_urls = collect_wikipedia_links(SOURCES_FILE_PATH)
+    #upsert_graph_from_wiki_urls(graph, wiki_urls)
     
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
         

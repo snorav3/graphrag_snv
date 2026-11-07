@@ -7,7 +7,8 @@
 #
 # 5. Hány vállalatcsoportnak vagy márkának van főhadiszállása egy adott kontinensen (pl. Európa)?
 # 6. Mik a Scania testvérmárkái (legfeljebb 5 mélységben)?
-# 7. Számold meg, hogy az egyes vállalatcsoportok alá közvetlenül hány márka tartozik!
+# 7. Számold meg, hogy az egyes vállalatcsoportok alá hány márka tartozik!
+#(8. Számold meg, hogy az egyes vállalatcsoportok alá közvetlenül hány márka tartozik!)
 
 
 QUESTIONS = [
@@ -67,6 +68,11 @@ QUESTIONS = [
     RETURN cg.name AS Vallalatcsoport, count(DISTINCT tb) AS OsszesMelysegiMarka
     ORDER BY OsszesMelysegiMarka DESC
     """
+    #, """
+    #MATCH (cg:CompanyGroup)-[:OWNS]->(tb:TruckBrand)
+    #RETURN cg.name AS Vallalatcsoport, count(DISTINCT tb) AS OsszesMelysegiMarka
+    #ORDER BY OsszesMelysegiMarka DESC
+    #"""
 ]
 
 """
